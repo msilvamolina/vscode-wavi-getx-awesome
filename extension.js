@@ -174,7 +174,7 @@ import '../ui/pages/home_page/home_page.dart';
 import '../ui/pages/unknown_route_page/unknown_route_page.dart';
 import 'app_routes.dart';
 
-final _defaultTransition = Transition.fadeIn;
+final _defaultTransition = Transition.native;
 
 class AppPages {
   static final unknownRoutePage = GetPage(
@@ -575,8 +575,8 @@ dependencies:
   rxdart:
 
 dev_dependencies:
-  build_runner: ^
-  freezed: ^
+  build_runner: 
+  freezed: 
   
   flutter_test:
     sdk: flutter

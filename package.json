@@ -3,13 +3,23 @@
   "displayName": "Wavi GetX Awesome",
   "description": "Wavi GetX Awesome Extension!",
   "publisher": "MartinSilvaMolina",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.56.0"
   },
+  "homepage": "https://github.com/msilvamolina/vscode-wavi-getx-awesome/blob/main/README.md",
   "categories": [
     "Other"
   ],
+  "bugs": {
+    "url": "https://github.com/msilvamolina/vscode-wavi-getx-awesome/issues",
+    "email": "waviacademy@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/msilvamolina/vscode-wavi-getx-awesome/"
+  },
+  "icon": "icon.png",
   "activationEvents": [
     "onCommand:wavi-getx-awesome.init-app",
     "onCommand:wavi-getx-awesome.new-page",
