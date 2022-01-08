@@ -18,6 +18,8 @@ function activate(context) {
           var _path = folderPath + "/lib/app/";
           createFolders(_path);
           setTimeout(() => createFirstFiles(folderPath, _text.trim()), 1000);
+          terminalCommand("flutter pub get");
+          terminalCommand("dart fix --apply");
           vscode.window.showInformationMessage("Done!");
         }
       });
@@ -167,7 +169,7 @@ function createAppPages(pagePath) {
 
   const content = `
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/routes/get_route.dart';
+
 
 import '../bindings/home_binding.dart';
 import '../ui/pages/home_page/home_page.dart';
@@ -179,7 +181,7 @@ final _defaultTransition = Transition.native;
 class AppPages {
   static final unknownRoutePage = GetPage(
     name: AppRoutes.UNKNOWN,
-    page: () => UnknownRoutePage(),
+    page: () => const UnknownRoutePage(),
     transition: _defaultTransition,
   );
 
@@ -187,7 +189,7 @@ class AppPages {
     unknownRoutePage,
     GetPage(
       name: AppRoutes.HOME,
-      page: () => HomePage(),
+      page: () => const HomePage(),
       binding: HomeBinding(),
       transition: _defaultTransition,
     ),
@@ -244,7 +246,9 @@ function createFirstFiles(pagePath, pageName) {
 function createAppRoutes(pagePath) {
   var newPath = pagePath + "routes/";
 
-  const content = `class AppRoutes {
+  const content = `
+  // ignore_for_file: constant_identifier_names
+  class AppRoutes {
   static const HOME = '/';
   static const UNKNOWN = '/404';
 }`;
@@ -382,31 +386,37 @@ function createThemesService(pagePath) {
   var newPath = pagePath + "data/services/";
 
   const content = `
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ThemeService {
   final _getStorage = GetStorage();
-  final storageKey = 'isDarkMode';
-
-  ThemeMode getThemeMode() {
-    return isSavedDarkMode() ? ThemeMode.dark : ThemeMode.light;
+  final _storageKey = 'ThemeMode';
+  static ThemeService instance = ThemeService._();
+  // ignore: empty_constructor_bodies
+  ThemeService._() {}
+  set themeMode(ThemeMode themeMode) {
+    if (themeMode == ThemeMode.system) {
+      _getStorage.remove(_storageKey);
+    } else {
+      _getStorage.write(_storageKey, themeMode == ThemeMode.dark);
+    }
+    Get.changeThemeMode(themeMode);
   }
 
-  bool isSavedDarkMode() {
-    return _getStorage.read(storageKey) ?? false;
-  }
-
-  void saveThemeMode(bool isDarkMode) {
-    _getStorage.write(storageKey, isDarkMode);
-  }
-
-  void changeThemeMode() {
-    Get.changeThemeMode(isSavedDarkMode() ? ThemeMode.light : ThemeMode.dark);
-    saveThemeMode(!isSavedDarkMode());
+  ThemeMode get themeMode {
+    switch (_getStorage.read(_storageKey)) {
+      case true:
+        return ThemeMode.dark;
+      case false:
+        return ThemeMode.light;
+      default:
+        return ThemeMode.system;
+    }
   }
 }
+
 `;
   fs.writeFile(path.join(newPath, "theme_service.dart"), content, (err) =>
     console.log(err)
@@ -419,10 +429,11 @@ function createTraslationService(pagePath) {
 import 'package:get/get.dart';
 
 import '../../translation/en.dart';
+import '../../translation/ar.dart';
 
 class Translation extends Translations {
   @override
-  Map<String, Map<String, String>> get keys => {'en': en};
+  Map<String, Map<String, String>> get keys => {'en': en,'ar': ar};
 }
 
 `;
@@ -455,7 +466,7 @@ class ModelHelpers {
     return json;
   }
 
-  String dateFromDocument(dynamic? date) {
+  String dateFromDocument(date) {
     if (date != null) {
       return date.toDate().toString();
     }
@@ -504,10 +515,12 @@ void main() async {
   await GetStorage.init();
   DependecyInjection.init();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -517,7 +530,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: Themes().lightTheme,
       darkTheme: Themes().darkTheme,
-      themeMode: ThemeService().getThemeMode(),
+      themeMode: ThemeService.instance.themeMode,
       translations: Translation(),
       locale: Locale('en'),
       fallbackLocale: Locale('en'),
@@ -538,16 +551,29 @@ class MyApp extends StatelessWidget {
 function createTraslation(pagePath, pageName) {
   var newPath = pagePath + "translation";
 
-  const content =
+  const en =
     `const Map<String, String> en = {
   'homeTitle': '` +
     pageName +
     `',
 };
 `;
-  fs.writeFile(path.join(newPath, "en.dart"), content, (err) =>
+const ar =
+    `const Map<String, String> ar = {
+  'homeTitle': '` +
+    pageName +
+    `',
+};
+`;
+
+fs.writeFile(path.join(newPath, "en.dart"), en, (err) =>
     console.log(err)
   );
+fs.writeFile(path.join(newPath, "ar.dart"), ar, (err) =>
+    console.log(err)
+  );
+
+
 }
 
 function createPubSpect(pagePath, pageName) {
@@ -569,6 +595,7 @@ dependencies:
   cupertino_icons:
   get:
   get_storage:
+  flutter_lints:
   freezed_annotation:
   dartz:
   json_serializable:
@@ -813,9 +840,10 @@ class ` +
     `Page extends GetView<` +
     className +
     `Controller> {
+      const `+ className +`Page ({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MainLayoutView(
+    return const MainLayoutView(
             child: Center(
         child: Text('` +
     className +
@@ -896,7 +924,7 @@ import '../ui/pages/` +
       name: AppRoutes.` +
       newName +
       `,
-      page: () => ` +
+      page: () => const ` +
       className +
       `Page(),
       binding: ` +
@@ -945,6 +973,11 @@ const capitalize = (s) => {
 function terminalFreezedCommand() {
   var command =
     "flutter pub run build_runner watch --delete-conflicting-outputs";
+  var term = vscode.window.createTerminal("Dawn");
+  term.show();
+  term.sendText(`${command}`);
+}
+function terminalCommand(command) {
   var term = vscode.window.createTerminal("Dawn");
   term.show();
   term.sendText(`${command}`);
