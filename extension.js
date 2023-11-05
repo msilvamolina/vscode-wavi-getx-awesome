@@ -667,24 +667,10 @@ abstract class ` +
 
   factory ` +
     className +
-    `.fromJson(Map<String, dynamic> json) =>
-      _$` +
-    className +
-    `FromJson(json);
-
-  factory ` +
-    className +
-    `.empty() => ` +
-    className +
-    `(id: '');
-
-  factory ` +
-    className +
     `.fromDocument(DocumentSnapshot doc) =>
       ` +
     className +
-    `.fromJson(ModelHelpers().fromDocument(doc.data()!))
-          .copyWith(id: doc.id);
+    `.fromJson(ModelHelpers().fromDocument(doc.data()!));
 
   Map<String, dynamic> toDocument() => ModelHelpers().toDocument(toJson());
 }
