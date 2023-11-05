@@ -26,6 +26,41 @@ function activate(context) {
 
   context.subscriptions.push(disposable);
 
+  let disposable7 = vscode.commands.registerCommand(
+    "wavi-getx-awesome.git-commit",
+    function () {
+      vscode.window.showInputBox({ placeHolder: "Commit" }).then((text) => {
+        var _text = text.trim();
+        if (_text.length > 0) {
+          var command =
+            "git add . && git commit -m '" + _text + "' && git push";
+
+          var term = vscode.window.createTerminal("Dawn");
+          term.show();
+          term.sendText(`${command}`);
+        }
+      });
+    }
+  );
+  context.subscriptions.push(disposable7);
+
+  let disposable8 = vscode.commands.registerCommand(
+    "wavi-getx-awesome.git-new-branch",
+    function () {
+      vscode.window.showInputBox({ placeHolder: "Branch" }).then((text) => {
+        var _text = text.trim();
+        if (_text.length > 0) {
+          var command = "git checkout -B '" + _text + "'";
+
+          var term = vscode.window.createTerminal("Dawn");
+          term.show();
+          term.sendText(`${command}`);
+        }
+      });
+    }
+  );
+  context.subscriptions.push(disposable8);
+
   let disposable2 = vscode.commands.registerCommand(
     "wavi-getx-awesome.new-page",
     function () {
