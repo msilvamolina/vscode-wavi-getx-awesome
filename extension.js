@@ -219,8 +219,8 @@ function createFirstFiles(pagePath, pageName) {
   createTraslation(_path, _capitalizeText);
   createMain(pagePath + "/lib/", _capitalizeText);
   createMainLayoutView(_path);
-  createController(_path, "main");
-  createController(_path, "navigation");
+  createControllerNew(_path, "main");
+  createControllerNew(_path, "navigation");
   createDependecyInjection(_path);
   createThemes(_path);
   createThemesService(_path);
@@ -231,12 +231,12 @@ function createFirstFiles(pagePath, pageName) {
   _frendlyText = "home";
 
   createBinding(_path, _frendlyText);
-  createController(_path, _frendlyText);
+  createControllerNew(_path, _frendlyText);
   createPage(_path, _frendlyText, false);
 
   _frendlyText = "unknown_route";
   createBinding(_path, _frendlyText);
-  createController(_path, _frendlyText);
+  createControllerNew(_path, _frendlyText);
   createPage(_path, _frendlyText, false);
 }
 
