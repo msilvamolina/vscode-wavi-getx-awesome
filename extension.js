@@ -39,7 +39,7 @@ function activate(context) {
         if (_text.length > 0) {
           var _frendlyText = frendlyText(_text);
           createBinding(_path, _frendlyText);
-          createController(_path, _frendlyText);
+          createControllerNew(_path, _frendlyText);
           createPage(_path, _frendlyText, true);
           vscode.window.showInformationMessage(_text + " created!");
         }
@@ -62,7 +62,6 @@ function activate(context) {
         if (_text.length > 0) {
           var _frendlyText = frendlyText(_text);
           createModel(_path, _frendlyText);
-          terminalFreezedCommand();
           vscode.window.showInformationMessage(_text + " created!");
         }
       });
@@ -598,10 +597,11 @@ function createBinding(pagePath, pageName) {
   const content =
     `
 import 'package:get/get.dart';
-import '` +
-    newPath +
+import '../ui/pages/` +
+    pageName +
+    `_page/` +
+    pageName +
     `_controller.dart';
-
 
 class ` +
     className +
@@ -768,8 +768,10 @@ class ` +
     (err) => console.log(err)
   );
 }
-function createController(pagePath, pageName) {
+
+function createControllerNew(pagePath, pageName) {
   var className = capitalizeName(pageName);
+
   const content =
     `
 import 'package:get/get.dart';
@@ -777,12 +779,15 @@ class ` +
     className +
     `Controller extends GetxController {}`;
 
-  var newPath = pagePath + "ui/pages/";
-  fs.writeFile(
-    path.join(newPath, pageName + "_controller.dart"),
-    content,
-    (err) => console.log(err)
-  );
+  var newPath = pagePath + "ui/pages/" + pageName + "_page";
+  fs.mkdir(newPath, { recursive: true }, (err) => {
+    if (err) throw err;
+    fs.writeFile(
+      path.join(newPath, pageName + "_controller.dart"),
+      content,
+      (err) => console.log(err)
+    );
+  });
 }
 
 function createPage(pagePath, pageName, updateFiles) {
