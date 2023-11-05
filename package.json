@@ -3,7 +3,7 @@
   "displayName": "Wavi GetX Awesome",
   "description": "Wavi GetX Awesome Extension!",
   "publisher": "MartinSilvaMolina",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": {
     "vscode": "^1.56.0"
   },
@@ -26,7 +26,9 @@
     "onCommand:wavi-getx-awesome.new-model",
     "onCommand:wavi-getx-awesome.new-failure",
     "onCommand:wavi-getx-awesome.new-repository",
-    "onCommand:wavi-getx-awesome.freezed-command"
+    "onCommand:wavi-getx-awesome.freezed-command",
+    "onCommand:wavi-getx-awesome.git-commit",
+    "onCommand:wavi-getx-awesome.git-new-branch"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -54,6 +56,14 @@
       {
         "command": "wavi-getx-awesome.freezed-command",
         "title": "Wavi GetX Freezed Command"
+      },
+      {
+        "command": "wavi-getx-awesome.git-commit",
+        "title": "Wavi GetX Git Commit"
+      },
+      {
+        "command": "wavi-getx-awesome.git-new-branch",
+        "title": "Wavi GetX Git New Branch"
       }
     ]
   },
