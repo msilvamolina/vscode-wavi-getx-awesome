@@ -592,11 +592,14 @@ flutter:
 
 function createBinding(pagePath, pageName) {
   var className = capitalizeName(pageName);
+
+  var newPath = pagePath + "ui/pages/" + pageName;
+
   const content =
     `
 import 'package:get/get.dart';
-import '../controllers/` +
-    pageName +
+import '` +
+    newPath +
     `_controller.dart';
 
 
@@ -788,7 +791,7 @@ class ` +
     className +
     `Controller extends GetxController {}`;
 
-  var newPath = pagePath + "controllers/";
+  var newPath = pagePath + "ui/pages/";
   fs.writeFile(
     path.join(newPath, pageName + "_controller.dart"),
     content,
@@ -800,11 +803,10 @@ function createPage(pagePath, pageName, updateFiles) {
   var className = capitalizeName(pageName);
 
   const content =
-    `import '../../layouts/main/widgets/main_layout_view.dart';
-import 'package:flutter/material.dart';
+    `import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controllers/` +
+import '` +
     pageName +
     `_controller.dart';
 
@@ -815,8 +817,13 @@ class ` +
     `Controller> {
   @override
   Widget build(BuildContext context) {
-    return MainLayoutView(
-            child: Center(
+    return Scaffold(
+            appBar: AppBar(
+        title: Text('` +
+    className +
+    `'),
+      ),
+            body: Center(
         child: Text('` +
     className +
     `'),
