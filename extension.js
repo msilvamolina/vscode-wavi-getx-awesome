@@ -38,6 +38,10 @@ function activate(context) {
           var term = vscode.window.createTerminal("Dawn");
           term.show();
           term.sendText(`${command}`);
+
+          setTimeout(() => {
+            term.dispose();
+          }, 2222);
         }
       });
     }
@@ -50,11 +54,21 @@ function activate(context) {
       vscode.window.showInputBox({ placeHolder: "Branch" }).then((text) => {
         var _text = text.trim();
         if (_text.length > 0) {
-          var command = "git checkout -B '" + _text + "'";
+          var command =
+            "git checkout -B '" +
+            _text +
+            "' && git add . && git commit -m '" +
+            _text +
+            "' &&  git push --set-upstream origin " +
+            _text;
 
           var term = vscode.window.createTerminal("Dawn");
           term.show();
           term.sendText(`${command}`);
+
+          setTimeout(() => {
+            term.dispose();
+          }, 2222);
         }
       });
     }
