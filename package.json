@@ -3,7 +3,7 @@
   "displayName": "Wavi GetX Awesome",
   "description": "Wavi GetX Awesome Extension!",
   "publisher": "MartinSilvaMolina",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "engines": {
     "vscode": "^1.56.0"
   },
