@@ -41,7 +41,7 @@ function activate(context) {
 
           setTimeout(() => {
             term.dispose();
-          }, 2222);
+          }, 5000);
         }
       });
     }
@@ -68,7 +68,7 @@ function activate(context) {
 
           setTimeout(() => {
             term.dispose();
-          }, 2222);
+          }, 5000);
         }
       });
     }
